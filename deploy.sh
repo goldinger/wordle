@@ -1,3 +1,5 @@
+#! /bin/bash
+
 # if venv doesn't exist, create it
 if [ ! -d "venv" ]; then
     python3 -m venv venv
