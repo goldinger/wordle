@@ -19,8 +19,9 @@
                     </div>
                 {% endfor %}
             </div>
-            <div id="input">
-                <input type="text" id="word" placeholder="Type a word">
+            <form method="post" id="input">
+                {% csrf_token %}
+                <input type="text" name="word" placeholder="Type a word" />
                 <button id="submit">Submit</button>
             </div>
         </div>
