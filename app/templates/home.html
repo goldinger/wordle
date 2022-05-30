@@ -7,6 +7,23 @@
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
 </head>
 <body>
-    <h1 class="title">TEST HOME</h1>
+    <div class="container">
+        <h1 id="mainTitle">Wordle</h1>
+        <div id="game">
+            <div id="board">
+                {% for word in words %}
+                    <div class="word">
+                        {% for letter in word %}
+                            <div class="letter {{letter.result}}">{{letter.character}}</div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+            <div id="input">
+                <input type="text" id="word" placeholder="Type a word">
+                <button id="submit">Submit</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
