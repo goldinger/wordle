@@ -44,7 +44,7 @@ def home(request):
         elif word in history:
             return render(request, 'home.html', {'words': all_words, 'error': "Déjà essayé..."})
         elif len(history) >= 5:
-            return render(request, 'home.html', {"words": all_words, 'error': "Abandonne frérot.e, tu est nul !"})
+            return render(request, 'home.html', {"words": all_words, 'error': "Abandonne frérot.e, tu est nul.le !"})
         
         with open('static/data/words.json', 'r') as f:
             possible_words = json.load(f)
