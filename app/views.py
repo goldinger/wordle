@@ -46,11 +46,11 @@ def home(request):
         elif len(history) >= 5:
             return render(request, 'home.html', {"words": all_words, 'error': "Abandonne frérot.e, tu est nul !"})
         
-        with open('static/data/words.json', 'r') as f:
-            possible_words = json.load(f)
-        print(len(possible_words))
-        if word not in possible_words:
-            return render(request, 'home.html', {"words": all_words, 'error': "Ca n'existe pas enculé.e !"})
+        # with open('static/data/words.json', 'r') as f:
+        #     possible_words = json.load(f)
+        # print(len(possible_words))
+        # if word not in possible_words:
+        #     return render(request, 'home.html', {"words": all_words, 'error': "Ca n'existe pas enculé.e !"})
           
         
         all_words.append(check_word(word, goal))
