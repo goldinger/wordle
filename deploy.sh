@@ -8,4 +8,4 @@ fi
 .venv/bin/pip install -r requirements.txt
 .venv/bin/python manage.py migrate
 
-systemctl restart wordle
+sudo systemctl restart wordle
