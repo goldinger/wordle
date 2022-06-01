@@ -2,7 +2,7 @@
 
 # if venv doesn't exist, create it
 if [ ! -d "venv" ]; then
-    sudo /root/.pyenv/versions/3.9.13/bin/python -m venv .venv
+    python3 -m venv .venv
 fi
 
 .venv/bin/pip install -r requirements.txt
