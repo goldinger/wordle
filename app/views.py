@@ -17,13 +17,13 @@ def check_word(word, reference) -> Generator:
 
 def home(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    print(x_forwarded_for)
+    # print(x_forwarded_for)
     if x_forwarded_for:
         ip = x_forwarded_for.split(',')[0]
     else:
         ip = request.META.get('REMOTE_ADDR')
         
-    print(ip)
+    # print(ip)
     current_round = Round.get_current_round()
     goal = current_round.word
     
@@ -46,11 +46,11 @@ def home(request):
         elif len(history) >= 5:
             return render(request, 'home.html', {"words": all_words, 'error': "Abandonne frérot.e, tu est nul !"})
         
-        # with open('static/data/words.json', 'r') as f:
-        #     possible_words = json.load(f)
+        with open('static/data/words.json', 'r') as f:
+            possible_words = json.load(f)
         # print(len(possible_words))
-        # if word not in possible_words:
-        #     return render(request, 'home.html', {"words": all_words, 'error': "Ca n'existe pas enculé.e !"})
+        if word not in possible_words:
+            return render(request, 'home.html', {"words": all_words, 'error': "Ca n'existe pas enculé.e !"})
           
         
         all_words.append(check_word(word, goal))
