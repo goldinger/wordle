@@ -26,10 +26,11 @@ def home(request):
     # print(ip)
     current_round = Round.get_current_round()
     goal = current_round.word
+    round_before = Round.get_round_before()
     
     if request.method == 'GET':
         all_words = [check_word(x.word, goal) for x in Guess.objects.filter(ip_address=ip, round=current_round).order_by('created_at')[:5]]
-        return render(request, 'home.html', {'words': all_words})
+        return render(request, 'home.html', {'yesterday': round_before.word ,'words': all_words})
     
     elif request.method == 'POST':
         word = request.POST.get("word", '').lower()
@@ -38,20 +39,20 @@ def home(request):
         all_words = [check_word(x, goal) for x in history]
         
         if goal in history:
-            return render(request, 'home.html', {'words': all_words, 'error': "Arrête de spam, t'as gagné..."})
+            return render(request, 'home.html', {'yesterday': round_before.word ,'words': all_words, 'error': "Arrête de spam, t'as gagné..."})
         elif len(word) != 5:
-            return render(request, 'home.html', {'words': all_words, 'error': 'Il faut 5 lettres abruti.e !'})
+            return render(request, 'home.html', {'yesterday': round_before.word ,'words': all_words, 'error': 'Il faut 5 lettres abruti.e !'})
         elif word in history:
-            return render(request, 'home.html', {'words': all_words, 'error': "Déjà essayé..."})
+            return render(request, 'home.html', {'yesterday': round_before.word ,'words': all_words, 'error': "Déjà essayé..."})
         elif len(history) >= 5:
-            return render(request, 'home.html', {"words": all_words, 'error': "Abandonne frérot.e, tu est nul.le !"})
+            return render(request, 'home.html', {'yesterday': round_before.word ,"words": all_words, 'error': "Abandonne frérot.e, tu est nul.le !"})
         
         with open('static/data/words.json', 'r') as f:
             possible_words = json.load(f)
         possible_words = [x.lower() for x in possible_words]
         # print(len(possible_words))
         if word not in possible_words:
-            return render(request, 'home.html', {"words": all_words, 'error': "Ca n'existe pas enculé.e !"})
+            return render(request, 'home.html', {'yesterday': round_before.word ,"words": all_words, 'error': "Ca n'existe pas enculé.e !"})
           
         
         all_words.append(check_word(word, goal))
