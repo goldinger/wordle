@@ -31,6 +31,6 @@ class Guess(models.Model):
     
     
     def __str__(self):
-        return f"{self.round} | {self.ip_address} | {self.word}"
+        return f"{self.round.datetime} | {self.ip_address} | {self.word}"
 
 
