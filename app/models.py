@@ -16,7 +16,7 @@ class Round(models.Model):
         return cls.objects.filter(datetime__lt=Round.get_current_round().datetime).latest('datetime')
 
     def __str__(self):
-        return f"{self.datetime} || {self.word}"
+        return f"{self.datetime} | {self.word}"
 
 
 class Guess(models.Model):
@@ -31,6 +31,6 @@ class Guess(models.Model):
     
     
     def __str__(self):
-        return f"{self.round.datetime} ||{self.ip_address} || {self.word}"
+        return f"{self.round} | {self.ip_address} | {self.word}"
 
 
