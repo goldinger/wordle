@@ -15,7 +15,7 @@ SECRET_KEY = 'django-insecure-co+&47&^2)r^ahnda*vv22#s1l0jgap-3v9!srm5*!7+$32)_3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ["wordle.sghir.me"]
+ALLOWED_HOSTS = [config('HOST', default='*')]
 
 
 # Application definition
@@ -111,6 +111,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

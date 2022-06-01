@@ -1,8 +1,11 @@
+import json
+from typing import Generator
 from django.shortcuts import render
+from app.models import Round, Guess
 
 # Create your views here.
 
-def check_word(word, reference) -> list:
+def check_word(word, reference) -> Generator:
     for i in range(len(word)):
         if word[i] == reference[i]:
             yield { "character": word[i], "result": "correct" }
@@ -10,24 +13,40 @@ def check_word(word, reference) -> list:
             yield { "character": word[i], "result": "close" }
         else:
             yield { "character": word[i], "result": "wrong" }
-        
+
+
 def home(request):
-    hello = [
-        { "character": "h", "result": "correct" },
-        { "character": "e", "result": "wrong" },
-        { "character": "l", "result": "close" },
-        { "character": "l", "result": "wrong" },
-        { "character": "o", "result": "close" },
-    ]
+    ip = request.META.get('REMOTE_ADDR')
+    current_round = Round.get_current_round()
+    goal = current_round.word
     
-    world = [
-        { "character": "w", "result": "wrong" },
-        { "character": "o", "result": "wrong" },
-        { "character": "r", "result": "wrong" },
-        { "character": "l", "result": "close" },
-        { "character": "d", "result": "correct" },
-    ]
-    words = [hello, world]
-    if request.method == "POST":
-        words.append(check_word(request.POST.get("word"), "hello"))
-    return render(request, 'home.html', context={"words": words})
+    if request.method == 'GET':
+        all_words = [check_word(x.word, goal) for x in Guess.objects.filter(ip_address=ip, round=current_round).order_by('created_at')[:5]]
+        return render(request, 'home.html', {'words': all_words})
+    
+    elif request.method == 'POST':
+        word = request.POST.get("word")
+        
+        history = [x.word for x in Guess.objects.filter(ip_address=ip, round=current_round).order_by('created_at')]
+        all_words = [check_word(x, goal) for x in history]
+        
+        if goal in history:
+            return render(request, 'home.html', {'words': all_words, 'error': "Arrête de spam, t'as gagné..."})
+        elif len(word) != 5:
+            return render(request, 'home.html', {'words': all_words, 'error': 'Il faut 5 lettres abruti.e !'})
+        elif word in history:
+            return render(request, 'home.html', {'words': all_words, 'error': "Déjà essayé..."})
+        elif len(history) >= 5:
+            return render(request, 'home.html', {"words": all_words, 'error': "Abandonne frérot.e, tu est nul !"})
+        
+        with open('static/data/words.json', 'r') as f:
+            possible_words = json.load(f)
+        print(len(possible_words))
+        if word not in possible_words:
+            return render(request, 'home.html', {"words": all_words, 'error': "Ca n'existe pas enculé.e !"})
+          
+        
+        all_words.append(check_word(word, goal))
+        Guess.objects.create(word=word, ip_address=ip, round=current_round)
+        return render(request, 'home.html', {'words': all_words})
+    
