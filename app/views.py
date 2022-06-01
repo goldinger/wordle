@@ -48,7 +48,7 @@ def home(request):
         
         with open('static/data/words.json', 'r') as f:
             possible_words = json.load(f)
-            possible_words = [x.lower() for x in possible_words]
+        possible_words = [x.lower() for x in possible_words]
         # print(len(possible_words))
         if word not in possible_words:
             return render(request, 'home.html', {"words": all_words, 'error': "Ca n'existe pas enculé.e !"})
