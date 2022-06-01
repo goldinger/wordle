@@ -121,5 +121,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRONJOBS = [
-    ('30 0 * * *', 'app.cron.new_round')
+    ('38 0 * * *', 'app.cron.new_round', '>> /var/lib/jenkins/workspace/Wordle/logs/new_round.log')
 ]
