@@ -1,5 +1,5 @@
-from app.scripts import new_round
+from app.scripts import new_round as nr
 
 
 def new_round():
-    new_round.run()
+    nr.run()
