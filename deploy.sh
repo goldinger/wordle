@@ -5,6 +5,5 @@ if [ ! -d ".venv" ]; then
     python3 -m venv .venv
 fi
 
-. .venv/bin/activate
-pip install -r requirements.txt
-python manage.py migrate
+.venv/bin/pip install -r requirements.txt
+.venv/bin/python manage.py migrate
