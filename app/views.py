@@ -32,7 +32,7 @@ def home(request):
         return render(request, 'home.html', {'words': all_words})
     
     elif request.method == 'POST':
-        word = request.POST.get("word")
+        word = request.POST.get("word", '').lower()
         
         history = [x.word for x in Guess.objects.filter(ip_address=ip, round=current_round).order_by('created_at')]
         all_words = [check_word(x, goal) for x in history]
@@ -48,6 +48,7 @@ def home(request):
         
         with open('static/data/words.json', 'r') as f:
             possible_words = json.load(f)
+            possible_words = [x.lower() for x in possible_words]
         # print(len(possible_words))
         if word not in possible_words:
             return render(request, 'home.html', {"words": all_words, 'error': "Ca n'existe pas enculé.e !"})
