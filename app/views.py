@@ -1,18 +1,29 @@
 import json
-from typing import Generator
+from typing import Dict, Generator, List
 from django.shortcuts import render
 from app.models import Round, Guess
 
 # Create your views here.
 
-def check_word(word, reference) -> Generator:
+def check_word(word: str, reference: str) -> List[Dict[str, str]]:
+    response = []
     for i in range(len(word)):
         if word[i] == reference[i]:
-            yield { "character": word[i], "result": "correct" }
+            response.append({ "character": word[i], "result": "correct" })
         elif word[i] in reference:
-            yield { "character": word[i], "result": "close" }
+            response.append({ "character": word[i], "result": "close" })
         else:
-            yield { "character": word[i], "result": "wrong" }
+            response.append({ "character": word[i], "result": "wrong" })
+    # for every letter that is "close", check if the letter has already been guessed "correct" and don't appear a second time. If so, set to wrong
+    for item in filter(lambda x: x["result"] == "close", response):
+        c = item["character"]
+        total_size = len([x for x in response if x["character"] == c and x["result"] == "correct"])
+        correct_size = len([x for x in reference if x == c])    
+        if total_size == correct_size:
+            item["result"] = "wrong"
+    
+    return response
+            
 
 
 def home(request):
