@@ -1,3 +1,12 @@
+body {
+    background: #f5f5f5;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100vh;
+    text-size-adjust: 100%;
+}
+
 .container {
     width: 100%;
     height: 100%;
@@ -7,35 +16,54 @@
     align-items: center;
 }
 
+.header {
+    width: 100%;
+    height: 60px;
+    background: #aaaaaa;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
 #game {
+    margin-top: 1em;
+    width: 100%;
+    height: calc(100% - 60px);
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+    box-sizing: border-box;
+    position: relative;
 }
 
 #board {
-    width: 500px;
-    height: 500px;
-    border: 1px solid black;
+    padding: 2px;
+    width: auto;
+    height: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+    animation-duration: 0.3s;
+    perspective: 800px;
 }
 
 .word {
-    width: 100%;
-    height: 100px;
+    width: auto;
+    height: auto;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: left;
 }
 
 .letter {
-    width: 20%;
-    height: 100%;
+    font: 4rem Verdana, Courier, monospace;
+    width: 8rem;
+    height: 8rem;
+    margin: 5px;
+    border-radius: 10%;
     border: 1px solid white;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 30px;
     font-weight: bold;
     color: white;
     background-color: black;
@@ -55,5 +83,38 @@
 }
 
 .error {
+    height: 6em;
     color: red;
+}
+
+#keyboard {
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.keyboard-line {
+    height: auto;
+    margin-bottom: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.keyboard-key {
+    flex-grow: 1;
+    height: 150px;
+    margin: 2px;
+    border: 1px solid black;
+    border-radius: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font: 32px Verdana, Courier, monospace;
+    font-weight: bold;
+    color: white;
+    background-color: black;
+    text-transform: uppercase;
+    cursor: pointer;
 }
