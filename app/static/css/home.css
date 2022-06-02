@@ -91,6 +91,7 @@ body {
 #keyboard {
     margin-bottom: 20px;
     width: 100%;
+    touch-action: manipulation;
 }
 
 .keyboard-line {
@@ -101,6 +102,7 @@ body {
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    touch-action: inherit;
 }
 
 .keyboard-key {
@@ -118,4 +120,5 @@ body {
     background-color: black;
     text-transform: uppercase;
     cursor: pointer;
+    touch-action: inherit;
 }
