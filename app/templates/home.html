@@ -1,22 +1,19 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Home</title>
+    <title>Wordle by Sghir</title>
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
 </head>
-<script>
-    if ( window.history.replaceState ) {
-        window.history.replaceState( null, null, window.location.href );
-    }
-</script>
 <body>
     <div class="container">
-        <h1 id="mainTitle">Wordle</h1>
-        <h6>v0.1.0</h6>
-        <p>Le mot d'hier: {{ yesterday }}</p>
-        <div id="game">
+        <div class="header">
+            <h6>v0.1.0</h6>
+            <h1 id="main-title">Wordle</h1>
+            <p>Le mot d'hier: {{ yesterday }}</p>
+        </div>
+        <main id="game">
             <div id="board">
                 {% for word in words %}
                     <div class="word">
@@ -25,16 +22,115 @@
                         {% endfor %}
                     </div>
                 {% endfor %}
-            </div>
-            <form method="post" id="input">
-                {% csrf_token %}
-                {% if error %}
-                    <div class="error">{{error}}</div>
+                {% if words|length < 5 %}
+                    <form method="post" class="word" id="write">
+                        {% csrf_token %}
+                        <div class="letter"></div>
+                        <div class="letter"></div>
+                        <div class="letter"></div>
+                        <div class="letter"></div>
+                        <div class="letter"></div>
+                        <input type="hidden" name="word" value="" />
+                    </form>
                 {% endif %}
-                <input type="text" name="word" value="" placeholder="Type a word" />
-                <button id="submit">Submit</button>
             </div>
-        </div>
+            {% if error %}
+                <div class="error">{{error}}</div>
+            {% endif %}
+            <div id="keyboard">
+                {% with keyboard='AZERTYUIOP QSDFGHJKLM !WXCVBN?' %}
+                    {% for line in keyboard.split %}
+                    <div class="keyboard-line">
+                        {% for key in line %}
+                            <div class="keyboard-key">{{key}}</div>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                {% endwith %}
+            </div>
+        </main>
     </div>
 </body>
+<script>
+    function type_letter(letter) {
+        let keyboardLetters = document.getElementById("write").getElementsByClassName("letter");
+        for (let i = 0; i < keyboardLetters.length; i++) {
+            if (keyboardLetters[i].innerHTML === "") {
+                keyboardLetters[i].innerHTML = letter;
+                break;
+            }
+        }
+    }
+
+    function submit_word() {
+        let letters = document.getElementById("write").getElementsByClassName("letter");
+        let word = "";
+        for (let i = 0; i < letters.length; i++) {
+            word += letters[i].innerHTML;
+        }
+        let form = document.forms.write;
+        // get input with name "word"
+        let input = form.elements.word;
+        input.value = word;
+
+        form.submit();
+    }
+
+    function delete_letter() {
+        let keyboardLetters = document.getElementById("write").getElementsByClassName("letter");
+        for (let i = keyboardLetters.length - 1; i >= 0; i--) {
+            if (keyboardLetters[i].innerHTML !== "") {
+                keyboardLetters[i].innerHTML = "";
+                break;
+            }
+        }
+    }
+
+
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+
+    let keyboard = document.getElementById("keyboard");
+    let keyboardKeys = keyboard.querySelectorAll(".keyboard-key");
+
+    keyboardKeys.forEach(key => {
+        let entry = key.innerHTML;
+        if (entry === '?') {
+            key.onclick = delete_letter;
+        }
+        else if (entry === '!') {
+            key.onclick = submit_word;
+        }
+        else {
+            key.onclick = () => type_letter(entry);
+        }
+    })
+
+    // complete board with empty lines limited to 5 maximum
+    let board = document.getElementById("board");
+    // get number of words
+    let words = board.getElementsByClassName("word");
+    // get number of empty lines
+    let emptyLines = 5 - words.length;
+    // add remaining empty lines
+    for (let i = 0; i < emptyLines; i++) {
+        let emptyLine = document.createElement("div");
+        emptyLine.className = "word";
+        emptyLine.innerHTML = "<div class='letter'></div><div class='letter'></div><div class='letter'></div><div class='letter'></div><div class='letter'></div>";
+        board.appendChild(emptyLine);
+    }
+
+
+    // Change labels for Enter and Suppr
+    keyboardKeys.forEach(key => {
+        if (key.innerHTML === '?') {
+            key.innerHTML = "Suppr";
+        }
+        else if (key.innerHTML === '!') {
+            key.innerHTML = "Enter";
+        }
+    })
+
+</script>
 </html>
