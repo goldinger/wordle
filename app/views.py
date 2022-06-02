@@ -6,13 +6,18 @@ from app.models import Round, Guess
 # Create your views here.
 
 def check_word(word, reference) -> Generator:
+    response = []
     for i in range(len(word)):
         if word[i] == reference[i]:
-            yield { "character": word[i], "result": "correct" }
+            response.append({ "character": word[i], "result": "correct" })
         elif word[i] in reference:
-            yield { "character": word[i], "result": "close" }
+            response.append({ "character": word[i], "result": "close" })
         else:
-            yield { "character": word[i], "result": "wrong" }
+            response.append({ "character": word[i], "result": "wrong" })
+    for item in filter(lambda x: x["result"] == "close", response):
+        item["result"] = "close"
+    return response
+            
 
 
 def home(request):
