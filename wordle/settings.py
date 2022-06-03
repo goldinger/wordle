@@ -123,3 +123,22 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CRONJOBS = [
     ('0 0 * * *', 'app.cron.new_round', f'>> {os.path.join(BASE_DIR, "logs/cron_new_round.log")} 2>&1'),
 ]
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs/debug.log')
+        }
+    },
+    "loggers": {
+        "django": {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        }
+    }
+}
