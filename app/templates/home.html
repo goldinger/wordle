@@ -33,6 +33,9 @@
                         <input type="hidden" name="word" value="" />
                     </form>
                 {% endif %}
+                {% if words|length >= 5 %}
+                    <p id="answer">Perdu ! Le mot du jour était "{{ goal }}"</p>
+                {% endif %}
             </div>
             {% if error %}
                 <div class="error">{{error}}</div>

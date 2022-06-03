@@ -41,7 +41,7 @@ def home(request):
     
     if request.method == 'GET':
         all_words = [check_word(x.word, goal) for x in Guess.objects.filter(ip_address=ip, round=current_round).order_by('created_at')[:5]]
-        return render(request, 'home.html', {'yesterday': round_before.word, 'words': all_words})
+        return render(request, 'home.html', {'yesterday': round_before.word, 'words': all_words, 'goal': goal})
     
     elif request.method == 'POST':
         word = request.POST.get("word", '').lower()
@@ -68,5 +68,5 @@ def home(request):
         
         all_words.append(check_word(word, goal))
         Guess.objects.create(word=word, ip_address=ip, round=current_round)
-        return render(request, 'home.html', {'yesterday': round_before.word, 'words': all_words})
+        return render(request, 'home.html', {'yesterday': round_before.word, 'words': all_words, 'goal': goal})
     
