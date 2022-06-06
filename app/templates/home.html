@@ -22,7 +22,7 @@
                         {% endfor %}
                     </div>
                 {% endfor %}
-                {% if words|length < 5 %}
+                {% if won is not True and lost is not True %}
                     <form method="post" class="word" id="write">
                         {% csrf_token %}
                         <div class="letter"></div>
@@ -33,10 +33,14 @@
                         <input type="hidden" name="word" value="" />
                     </form>
                 {% endif %}
-                {% if words|length >= 5 %}
-                    <p id="answer">Perdu ! Le mot du jour était "{{ goal }}"</p>
-                {% endif %}
+                
             </div>
+            {% if lost %}
+                <p id="answer">Perdu ! Le mot du jour était "{{ goal }}"</p>
+            {% endif %}
+            {% if won %}
+                <p id="answer">Bravo, je t'aurais demain !</p>
+            {% endif %}
             {% if error %}
                 <div class="error">{{error}}</div>
             {% endif %}
