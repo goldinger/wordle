@@ -135,5 +135,18 @@
         }
     })
 
+    document.addEventListener('keydown', (event) => {
+        var name = event.key;
+        if (name === 'Backspace') {
+            delete_letter();
+        }
+        else if (name === 'Enter') {
+            submit_word();
+        }
+        else if ('azertyuiopqsdfghjklmwxcvbn'.includes(name)) {
+            type_letter(name);
+        }
+    }, false);
+
 </script>
 </html>
