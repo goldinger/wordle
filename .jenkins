@@ -1,0 +1,53 @@
+pipeline {
+    agent any
+    stages {
+        stage('Setup Environment'){
+            steps {
+                sh '''
+                    chmod +x scripts/envsetup.sh
+                    ./scripts/envsetup.sh
+                    '''
+            }
+        }
+        stage('Build Django Project'){
+            steps {
+                sh '''
+                    chmod +x scripts/build.sh
+                    ./scripts/build.sh
+                    '''
+            }
+        }
+        stage('Run Tests'){
+            steps {
+                sh '''
+                    chmod +x scripts/runtests.sh
+                    ./scripts/runtests.sh
+                    '''
+            }
+        }
+        stage('Schedules Cron Jobs'){
+            steps {
+                sh '''
+                    chmod +x scripts/crontab.sh
+                    ./scripts/crontab.sh
+                    '''
+            }
+        }
+        stage('Setup gunicorn service'){
+            steps {
+                sh '''
+                    chmod +x scripts/gunicorn.sh
+                    ./scripts/gunicorn.sh
+                    '''
+            }
+        }
+        stage('Setup Nginx'){
+            steps {
+                sh '''
+                    chmod +x scripts/nginx.sh
+                    ./scripts/nginx.sh
+                    '''
+            }
+        }
+    }
+}
