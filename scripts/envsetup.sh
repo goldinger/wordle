@@ -7,7 +7,7 @@ else
     ~/.pyenv/versions/3.9.13/bin/python3 -m venv env
 fi
 
-source .venv/bin/activate
+. .venv/bin/activate
 
 pip install -r requirements.txt
 
