@@ -13,6 +13,7 @@ python --version
 
 python -m pip install --upgrade pip
 
+pip install mysqlclient==2.1.0
 pip install -r requirements.txt
 
 if [ -d "logs" ] 
