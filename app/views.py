@@ -38,35 +38,50 @@ def home(request):
     current_round = Round.get_current_round()
     goal = current_round.word
     round_before = Round.get_round_before()
-    
+    response_data = { "yesterday": round_before.word }
     if request.method == 'GET':
-        all_words = [check_word(x.word, goal) for x in Guess.objects.filter(ip_address=ip, round=current_round).order_by('created_at')[:5]]
-        return render(request, 'home.html', {'yesterday': round_before.word, 'words': all_words, 'goal': goal})
+        history = [x.word for x in Guess.objects.filter(ip_address=ip, round=current_round).order_by('created_at')[:5]]
+        all_words = [check_word(x, goal) for x in history]
+        response_data["words"] = all_words
+        if goal in history:
+            response_data["won"] = True
+        elif len(history) >= 5:
+            response_data["lost"] = True
     
     elif request.method == 'POST':
         word = request.POST.get("word", '').lower()
         
         history = [x.word for x in Guess.objects.filter(ip_address=ip, round=current_round).order_by('created_at')]
         all_words = [check_word(x, goal) for x in history]
-        
+        response_data["words"] = all_words
+        response_data["goal"] = goal
+                
         if goal in history:
-            return render(request, 'home.html', {'yesterday': round_before.word, 'words': all_words, 'error': "Arrête de spam, t'as gagné..."})
+            response_data["error"] = "Arrête de spam, t'as gagné..."
+            response_data["won"] = True
         elif len(word) != 5:
-            return render(request, 'home.html', {'yesterday': round_before.word, 'words': all_words, 'error': 'Il faut 5 lettres abruti.e !'})
+            response_data["error"] = 'Il faut 5 lettres abruti.e !'
         elif word in history:
-            return render(request, 'home.html', {'yesterday': round_before.word, 'words': all_words, 'error': "Déjà essayé..."})
+            response_data["error"] = 'Déjà essayé !'
         elif len(history) >= 5:
-            return render(request, 'home.html', {'yesterday': round_before.word, "words": all_words, 'error': "Abandonne frérot.e, tu est nul.le !"})
+            response_data["error"] = "Abandonne frérot.e, tu est nul.le !"
+            response_data["lost"] = True
+        elif len(history) == 4 and word != goal:
+            response_data["error"] = "Oh mais quel loser.e"
+            response_data["lost"] = True
+        else:
+            if word == goal:
+                response_data["won"] = True
+            with open('static/data/words.json', 'r') as f:
+                possible_words = json.load(f)
+            possible_words = [x.lower() for x in possible_words]
+            # print(len(possible_words))
+            if word not in possible_words:
+                response_data["error"] = "Ca n'existe pas enculé.e !"
+                return render(request, 'home.html', response_data)
+            
+            all_words.append(check_word(word, goal))
+            Guess.objects.create(word=word, ip_address=ip, round=current_round)
         
-        with open('static/data/words.json', 'r') as f:
-            possible_words = json.load(f)
-        possible_words = [x.lower() for x in possible_words]
-        # print(len(possible_words))
-        if word not in possible_words:
-            return render(request, 'home.html', {'yesterday': round_before.word, "words": all_words, 'error': "Ca n'existe pas enculé.e !"})
-          
-        
-        all_words.append(check_word(word, goal))
-        Guess.objects.create(word=word, ip_address=ip, round=current_round)
-        return render(request, 'home.html', {'yesterday': round_before.word, 'words': all_words, 'goal': goal})
+    return render(request, 'home.html', response_data)
     
