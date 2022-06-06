@@ -4,7 +4,7 @@ if [ -d ".venv" ]
 then
     echo "Python virtual environment exists." 
 else
-    ~/.pyenv/versions/3.9.13/bin/python3 -m venv env
+    ~/.pyenv/versions/3.9.13/bin/python3 -m venv .venv
 fi
 
 . .venv/bin/activate
