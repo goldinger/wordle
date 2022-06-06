@@ -10,6 +10,6 @@ sudo systemctl enable wordle
 
 echo "Gunicorn has been enabled."
 
-sudo systemctl restart wordle
-
 sudo systemctl status wordle
+
+sudo systemctl restart wordle
