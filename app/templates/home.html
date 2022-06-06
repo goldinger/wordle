@@ -45,7 +45,7 @@
                     {% for line in keyboard.split %}
                     <div class="keyboard-line">
                         {% for key in line %}
-                            <button class="keyboard-key">{{key}}</button>
+                            <button id="keyboard-letter-{{key|lower}}" class="keyboard-key">{{key}}</button>
                         {% endfor %}
                     </div>
                     {% endfor %}
@@ -135,6 +135,7 @@
         }
     })
 
+    // add keyboard typing
     document.addEventListener('keydown', (event) => {
         var name = event.key;
         if (name === 'Backspace') {
@@ -147,6 +148,22 @@
             type_letter(name);
         }
     }, false);
+
+    // indicate wrong letters on keyboard
+    // get childs of div "word" with class "wrong"
+    let wrongLetters = document.getElementsByClassName("wrong");
+    // iterate over wrongLetters
+    for (let i = 0; i < wrongLetters.length; i++) {
+        // get letter
+        let letter = wrongLetters[i].innerHTML;
+        // get keyboard key
+        let key = document.getElementById("keyboard-letter-" + letter.toLowerCase());
+        // add class "wrong"
+        key.classList.add("wrong");
+    }
+
+
+
 
 </script>
 </html>

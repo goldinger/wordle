@@ -87,7 +87,7 @@ body {
     background-color: orange;
 }
 
-.wrong {
+.word.wrong {
     background-color: #101010;
 }
 
@@ -128,6 +128,10 @@ body {
     text-transform: uppercase;
     cursor: pointer;
     touch-action: inherit;
+}
+
+.keyboard-key.wrong {
+    background-color: #424242;
 }
 
 #answer {
