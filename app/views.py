@@ -39,6 +39,7 @@ def home(request):
     goal = current_round.word
     round_before = Round.get_round_before()
     response_data = { "yesterday": round_before.word }
+    response_data["goal"] = goal
     if request.method == 'GET':
         history = [x.word for x in Guess.objects.filter(ip_address=ip, round=current_round).order_by('created_at')[:5]]
         all_words = [check_word(x, goal) for x in history]
@@ -56,7 +57,6 @@ def home(request):
         history = [x.word for x in Guess.objects.filter(ip_address=ip, round=current_round).order_by('created_at')]
         all_words = [check_word(x, goal) for x in history]
         response_data["words"] = all_words
-        response_data["goal"] = goal
                 
         if goal in history:
             response_data["error"] = "Arrête de spam, t'as gagné..."
