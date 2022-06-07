@@ -76,9 +76,6 @@ def home(request):
         if word == goal:
             response_data["won"] = True
             #don't return request, we need to register the guess
-        elif len(history) == 4:
-            response_data["error"] = "Oh mais quel loser.e"
-            response_data["lost"] = True
         
         with open('static/data/words.json', 'r') as f:
             possible_words = json.load(f)
@@ -87,6 +84,10 @@ def home(request):
         if word not in possible_words:
             response_data["error"] = "Ca n'existe pas enculé.e !"
             return render(request, 'home.html', response_data)
+        
+        if len(history) == 4 and word != goal:
+            response_data["error"] = "Oh mais quel loser.e"
+            response_data["lost"] = True
         
         all_words.append(check_word(word, goal))
         Guess.objects.create(word=word, ip_address=ip, round=current_round)
