@@ -1,8 +1,7 @@
 from django import urls
 import pytest
-from app.models import Guess, Round
+from app.models import Guess
 from bs4 import BeautifulSoup
-from datetime import datetime, timedelta, timezone
 
 
 @pytest.mark.parametrize('view_name', ['home'])
@@ -42,9 +41,9 @@ def test_keyboard_helper(client, init_rounds):
     
     resp = client.post(url, data={'word': 'theme'})
     assert resp.status_code == 200
-    soup = BeautifulSoup(resp.content, 'html.parser')
-    t = soup.find('button', {'id': 'keyboard-letter-t'})
-    print(t.get('class'))
+    # TODO: need to test on rendered page since keyboard is well rendered after javascript executes
+    # soup = BeautifulSoup(resp.content, 'html.parser')
+    # t = soup.find('button', {'id': 'keyboard-letter-t'})
     # h = soup.find('button', {'id': 'keyboard-letter-h'})
     # m = soup.find('button', {'id': 'keyboard-letter-m'})
     # e = soup.find('button', {'id': 'keyboard-letter-e'})
