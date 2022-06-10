@@ -1,5 +1,5 @@
 import json
-from typing import Dict, Generator, List
+from typing import Dict, List
 from django.shortcuts import render
 from app.models import Round, Guess
 
