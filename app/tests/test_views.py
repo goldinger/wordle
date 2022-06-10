@@ -18,7 +18,6 @@ def test_guess_view_post(client, init_rounds, guess_data, guess_data_label):
     nb_guesses_before = Guess.objects.count()
     temp_url = urls.reverse('home')
     resp = client.post(temp_url, data=guess_data[guess_data_label])
-    print(resp.content)
     assert resp.status_code == 200
     nb_guesses_after = Guess.objects.count()
     if guess_data_label in ['correct', 'wrong']:
