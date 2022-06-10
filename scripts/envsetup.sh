@@ -11,7 +11,7 @@ fi
 
 python --version
 
-python -m pip install --upgrade pip
+python -m pip install --upgrade pip wheel setuptools
 
 pip install mysqlclient==2.1.0
 pip install gunicorn==20.1.0
