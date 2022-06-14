@@ -4,6 +4,9 @@ from app.models import Guess
 # from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 
+from app.tests.utils import type_word
+from app.views import check_word
+
 
 HOMEPAGE = 'http://127.0.0.1:8000'
 
@@ -33,23 +36,21 @@ def test_guess_view_post(client, guess_data, guess_data_label):
 
 
 @pytest.mark.django_db
-def test_keyboard_helper(client, live_server, browser):
+def test_keyboard_helper(client, live_server, browser, guess_data):
     assert client.get(live_server.url).status_code == 200
     browser.get(live_server.url)
     keys = browser.find_elements(By.CLASS_NAME, 'keyboard-key')
     for key in keys:
         assert 'wrong' not in key.get_attribute('class')
     
-    # resp = browser.post(url, data={'word': 'theme'})
-    # TODO: need to test on rendered page since keyboard is well rendered after javascript executes
-    # soup = BeautifulSoup(resp.content, 'html.parser')
-    # t = soup.find('button', {'id': 'keyboard-letter-t'})
-    # h = soup.find('button', {'id': 'keyboard-letter-h'})
-    # m = soup.find('button', {'id': 'keyboard-letter-m'})
-    # e = soup.find('button', {'id': 'keyboard-letter-e'})
-    # assert t and 'wrong' in t.get('class')
-    # assert e and 'wrong' in h.get('class')
-    # assert m and 'wrong' not in m.get('class')
-    # assert e and 'wrong' not in e.get('class')
+    word = guess_data.get('wrong').get('word').lower()
+    type_word(browser, word)
+    browser.find_element(By.ID, f'keyboard-letter-!').click()
+    check = check_word(word, guess_data.get('correct').get('word'))
+    for item in filter(lambda x: x['result'] == 'wrong', check):
+        if item['result'] == 'wrong':
+            assert 'wrong' in browser.find_element(By.ID, f'keyboard-letter-{item["character"]}').get_attribute('class').split(' ')
+        else:
+            assert 'wrong' not in browser.find_element(By.ID, f'keyboard-letter-{item["character"]}').get_attribute('class').split(' ')
     
     

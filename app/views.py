@@ -1,3 +1,4 @@
+from http.client import responses
 import json
 from typing import Dict, List
 from django.shortcuts import render
@@ -6,6 +7,8 @@ from app.models import Round, Guess
 # Create your views here.
 
 def check_word(word: str, reference: str) -> List[Dict[str, str]]:
+    word = word.lower()
+    reference = reference.lower()
     response = []
     for i in range(len(word)):
         if word[i] == reference[i]:
@@ -39,6 +42,9 @@ def home(request):
     goal = current_round.word
     round_before = Round.get_round_before()
     response_data = { "yesterday": round_before.word }
+    response_data["won"] = False
+    response_data["lost"] = False
+    response_data["error"] = None
     response_data["goal"] = goal
     if request.method == 'GET':
         history = [x.word for x in Guess.objects.filter(ip_address=ip, round=current_round).order_by('created_at')[:5]]
