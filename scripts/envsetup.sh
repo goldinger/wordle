@@ -17,7 +17,7 @@ pip install mysqlclient==2.1.0
 pip install gunicorn==20.1.0
 pip install -r requirements.txt
 
-if [ -f "chromedriver"]
+if command -v chromedriver &> /dev/null
 then
     echo "Chromedriver exists"
 else
