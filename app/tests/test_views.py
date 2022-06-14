@@ -1,12 +1,19 @@
 from django import urls
 import pytest
 from app.models import Guess
-from bs4 import BeautifulSoup
+# from bs4 import BeautifulSoup
+from selenium.webdriver.common.by import By
+
+from app.tests.utils import type_word
+from app.views import check_word
+
+
+HOMEPAGE = 'http://127.0.0.1:8000'
 
 
 @pytest.mark.parametrize('view_name', ['home'])
 @pytest.mark.django_db
-def test_render_views(client, view_name, init_rounds):
+def test_render_views(client, view_name):
     temp_url = urls.reverse(view_name)
     resp = client.get(temp_url)
     assert resp.status_code == 200
@@ -14,7 +21,7 @@ def test_render_views(client, view_name, init_rounds):
 
 @pytest.mark.parametrize('guess_data_label', ['wrong', 'unknown', 'correct'])
 @pytest.mark.django_db
-def test_guess_view_post(client, init_rounds, guess_data, guess_data_label):
+def test_guess_view_post(client, guess_data, guess_data_label):
     nb_guesses_before = Guess.objects.count()
     temp_url = urls.reverse('home')
     resp = client.post(temp_url, data=guess_data[guess_data_label])
@@ -29,26 +36,21 @@ def test_guess_view_post(client, init_rounds, guess_data, guess_data_label):
 
 
 @pytest.mark.django_db
-def test_keyboard_helper(client, init_rounds):
-    url = urls.reverse('home')
-    home = client.get(url)
-    assert home.status_code == 200
-    soup = BeautifulSoup(home.content, 'html.parser')
-    keys = soup.find_all('button', {'class': 'keyboard-key'})
+def test_keyboard_helper(client, live_server, browser, guess_data):
+    assert client.get(live_server.url).status_code == 200
+    browser.get(live_server.url)
+    keys = browser.find_elements(By.CLASS_NAME, 'keyboard-key')
     for key in keys:
-        assert 'wrong' not in key.get('class')
+        assert 'wrong' not in key.get_attribute('class')
     
-    resp = client.post(url, data={'word': 'theme'})
-    assert resp.status_code == 200
-    # TODO: need to test on rendered page since keyboard is well rendered after javascript executes
-    # soup = BeautifulSoup(resp.content, 'html.parser')
-    # t = soup.find('button', {'id': 'keyboard-letter-t'})
-    # h = soup.find('button', {'id': 'keyboard-letter-h'})
-    # m = soup.find('button', {'id': 'keyboard-letter-m'})
-    # e = soup.find('button', {'id': 'keyboard-letter-e'})
-    # assert t and 'wrong' in t.get('class')
-    # assert e and 'wrong' in h.get('class')
-    # assert m and 'wrong' not in m.get('class')
-    # assert e and 'wrong' not in e.get('class')
+    word = guess_data.get('wrong').get('word').lower()
+    type_word(browser, word)
+    browser.find_element(By.ID, f'keyboard-letter-!').click()
+    check = check_word(word, guess_data.get('correct').get('word'))
+    for item in filter(lambda x: x['result'] == 'wrong', check):
+        if item['result'] == 'wrong':
+            assert 'wrong' in browser.find_element(By.ID, f'keyboard-letter-{item["character"]}').get_attribute('class').split(' ')
+        else:
+            assert 'wrong' not in browser.find_element(By.ID, f'keyboard-letter-{item["character"]}').get_attribute('class').split(' ')
     
     

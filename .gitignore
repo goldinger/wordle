@@ -5,6 +5,10 @@ __pycache__/
 static/
 logs/
 
+
+chromedriver.exe
+chromedriver
+
 # C extensions
 *.so
 
