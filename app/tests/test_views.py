@@ -53,4 +53,3 @@ def test_keyboard_helper(client, live_server, browser, guess_data):
         else:
             assert 'wrong' not in browser.find_element(By.ID, f'keyboard-letter-{item["character"]}').get_attribute('class').split(' ')
     
-    
