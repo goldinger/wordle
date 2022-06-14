@@ -21,12 +21,8 @@ if [ -f "chromedriver"]
 then
     echo "Chromedriver exists"
 else
-    sudo apt install -y unzip
-    wget https://chromedriver.storage.googleapis.com/103.0.5060.24/chromedriver_linux64.zip
-    unzip chromedriver_linux64.zip
-    sudo mv chromedriver /usr/bin/chromedriver
-    sudo chown jenkins:jenkins /usr/bin/chromedriver
-    sudo chmod +x /usr/bin/chromedriver
+    chmod +x scripts/install_chrome.sh
+    sudo sh scripts/install_chrome.sh
 fi
 
 if [ -d "logs" ] 
