@@ -7,7 +7,7 @@ sudo apt update
 sudo apt install -y curl unzip xvfb libxi6 libgconf-2-4 default-jdk google-chrome-stable
 
 
-wget https://chromedriver.storage.googleapis.com/103.0.5060.24/chromedriver_linux64.zip
+wget https://chromedriver.storage.googleapis.com/102.0.5005.61/chromedriver_linux64.zip
 unzip chromedriver_linux64.zip
 
 sudo mv chromedriver /usr/bin/chromedriver
