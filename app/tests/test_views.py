@@ -30,9 +30,7 @@ def test_guess_view_post(client, guess_data, guess_data_label):
     if guess_data_label in ['correct', 'wrong']:
         assert nb_guesses_after == nb_guesses_before + 1
     elif guess_data_label in ['unknown']:
-        assert nb_guesses_after == nb_guesses_before
-    else:
-        raise ValueError("Unknown guess_data_label")    
+        assert nb_guesses_after == nb_guesses_before 
 
 
 @pytest.mark.django_db
@@ -50,6 +48,17 @@ def test_keyboard_helper(client, live_server, browser, guess_data):
     for item in filter(lambda x: x['result'] == 'wrong', check):
         if item['result'] == 'wrong':
             assert 'wrong' in browser.find_element(By.ID, f'keyboard-letter-{item["character"]}').get_attribute('class').split(' ')
-        else:
-            assert 'wrong' not in browser.find_element(By.ID, f'keyboard-letter-{item["character"]}').get_attribute('class').split(' ')
+        # else:
+        #     assert 'wrong' not in browser.find_element(By.ID, f'keyboard-letter-{item["character"]}').get_attribute('class').split(' ')
     
+
+def test_check_word_function():
+    word = "rouge"
+    reference = "porte"
+    assert check_word(word, reference) == [
+        {'character': 'r', 'result': 'close'},
+        {'character': 'o', 'result': 'correct'},
+        {'character': 'u', 'result': 'wrong'},
+        {'character': 'g', 'result': 'wrong'},
+        {'character': 'e', 'result': 'correct'}
+    ]

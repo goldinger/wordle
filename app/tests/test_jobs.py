@@ -1,5 +1,13 @@
 from app.models import Guess, Round
 from app.scripts import new_round
+from app import cron
+
+
+def test_new_round_job_from_cron():
+    count = Round.objects.count()
+    cron.new_round()
+    new_count = Round.objects.count()
+    assert new_count == count + 1
 
 
 def test_new_round_job():

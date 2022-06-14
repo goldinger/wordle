@@ -1,5 +1,3 @@
-from ipaddress import ip_address
-from tabnanny import verbose
 from django.db import models
 
 
