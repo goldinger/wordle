@@ -24,6 +24,9 @@ else
     sudo apt install -y unzip
     wget https://chromedriver.storage.googleapis.com/103.0.5060.24/chromedriver_linux64.zip
     unzip chromedriver_linux64.zip
+    sudo mv chromedriver /usr/bin/chromedriver
+    sudo chown jenkins:jenkins /usr/bin/chromedriver
+    sudo chmod +x /usr/bin/chromedriver
 fi
 
 if [ -d "logs" ] 
